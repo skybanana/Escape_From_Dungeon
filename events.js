@@ -44,8 +44,10 @@ export class Event{
         let result = '';
         logs.push(chalk.green(`어두운 복도에서 ${chalk.redBright(monster.name)}와 마주쳤다.\n${monster.info}`));
         // 몬스터 패턴 결정
-
-        // 버프 처리
+        let pattern = Math.floor(Math.random() * monster.skills.length);
+        
+        // 버프 처리 or 행동 예고
+        logs.push(monster.skills[pattern].info)
 
         // 몬스터, 플레이어 중 하나가 패배하면 끝
         while(player.hp > 0 && monster.hp > 0) {
@@ -95,10 +97,15 @@ export class Event{
         
             //몬스터의 차례
             if(monster.hp > 0){
-                choice_log = chalk.blueBright(player.name) + monster.pattern_execute(1,[player])
-                logs.push(choice_log);
+                if(monster.skills[pattern].type == 0){
+                    choice_log = chalk.blueBright(player.name) + monster.attack(player)
+                    logs.push(choice_log);
+                }
 
                 // 몬스터 패턴 결정
+                pattern = Math.floor(Math.random() * monster.skills.length);
+                // 버프 처리 or 행동 예고
+                logs.push(monster.skills[pattern].info)
             }
 
             // 버프 소비
