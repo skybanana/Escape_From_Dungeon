@@ -11,10 +11,10 @@ class bonus {
 }
 
 class skill {
-  constructor(name, type, bonus, info, effect){
+  constructor(name, type, bonus, info, buffTime=2, effect){
     this.name = name;
     this.type = type; // attack:0, buff:1
-    this.bonus = bonus;
+    this.bonus = new Array(buffTime).fill(bonus);
     this.info = info;
     this.effect = effect;
   }
@@ -48,7 +48,6 @@ export class Character {
       this.escape_chance = escape_chance;
       // 행동 처리
       this.skills = skills
-      this._dodge_ready = false;
       this._buff_stack = [new bonus()];
     }
 
@@ -68,6 +67,9 @@ export class Character {
         enemy.hp -= damage;
         result = chalk.green(`(은)는 ${chalk.magentaBright(damage)}의 피해를 입었다.`);
         if(crit) result += chalk.red(" 치명타!")
+
+        //버프 동작 테스트
+        result += chalk.yellow('('+Object.values(bonus).join(',')+')')
       }
       
       return result
@@ -75,8 +77,8 @@ export class Character {
 
     //회피 판정
     dodge(atk_acc) {
-      let hit = atk_acc - this.dodge_chance * this._dodge_ready
-      this._dodge_ready = false;
+      const bonus = this._buff_stack[0]
+      const hit = atk_acc - (this.dodge_chance + bonus.dodge)
       return  Math.random() < hit ? false : true;
     }
 
@@ -131,7 +133,7 @@ const Monsters = {
       100, 10, 0.5, 0, 0, 1, 0.5,
       // hp atk crit dodge combo acc escape
       [new skill('공격하기', 0, new bonus(),'오른팔을 거칠게 들었다.'),
-        new skill('회피하기', 1, new bonus({dodge:90}),'회피 자세를 취했다.')]  //skills
+        new skill('회피하기', 1, new bonus(0,0,0.9,0,0),'회피 자세를 취했다.', 2)]  //skills
     ]
   },
   Madman : {
@@ -141,7 +143,7 @@ const Monsters = {
       100, 10, 0.5, 0, 0, 1, 0.5,
       // hp atk crit dodge combo acc escape
       [new skill('공격하기', 0, new bonus(),'오른팔을 거칠게 들었다.'),
-        new skill('회피하기', 1, new bonus({dodge:90}),'회피 자세를 취했다.')]  //skills
+        new skill('회피하기', 1, new bonus(0,0,0.9,0,0),'회피 자세를 취했다.')]  //skills
     ]
   },
   Rabble : {
@@ -151,7 +153,7 @@ const Monsters = {
       100, 10, 0.5, 0, 0, 1, 0.5,
       //hp atk crit dodge combo acc escape
       [new skill('공격하기', 0, new bonus(), '오른팔을 거칠게 들었다.'),
-      new skill('회피하기', 1, new bonus({dodge:90}), '회피 자세를 취했다.')]  //skills
+      new skill('회피하기', 1, new bonus(0,0,90,0,0), '회피 자세를 취했다.')]  //skills
     ]
   },
   Brawler : {
@@ -161,7 +163,7 @@ const Monsters = {
       100, 10, 0.5, 0, 0, 1, 0.5,
       //hp atk crit dodge combo acc escape
       [new skill('부러뜨리기', 0, new bonus(), '내 팔을 거칠게 잡았다.'),
-      new skill('회피하기', 1, new bonus({dodge:90}), '회피 자세를 취했다.')]  //skills
+      new skill('회피하기', 1, new bonus(0,0,90,0,0), '회피 자세를 취했다.')]  //skills
     ]
   },
   Political_Prisoner : {
@@ -171,7 +173,7 @@ const Monsters = {
       100, 10, 0.5, 0, 0, 1, 0.5,
       //hp atk crit dodge combo acc escape
       [new skill('공격하기', 0, new bonus(), '오른팔을 거칠게 들었다.'),
-      new skill('회피하기', 1, new bonus({dodge:90}), '회피 자세를 취했다.')]  //skills
+      new skill('회피하기', 1, new bonus(0,0,90,0,0), '회피 자세를 취했다.')]  //skills
     ]
   }
 }
@@ -184,7 +186,7 @@ export const players = {
       100, 10, 0.5, 0, 0, 1, 0.5,
       //hp atk crit dodge combo acc escape
       [new skill('공격하기', 0, new bonus(), '오른팔을 거칠게 들었다.'),
-      new skill('회피하기', 1, new bonus({dodge:90}), '회피 자세를 취했다.')]  //skills
+      new skill('회피하기', 1, new bonus(0,0,90,0,0), '회피 자세를 취했다.')]  //skills
     ]
   },
   Highwayman : {
@@ -194,7 +196,7 @@ export const players = {
       100, 10, 0.5, 0, 0, 1, 0.5,
       // hp atk crit dodge combo acc escape
       [new skill('공격하기', 0, new bonus(),'오른팔을 거칠게 들었다.'),
-        new skill('회피하기', 1, new bonus({dodge:90}),'회피 자세를 취했다.')]  //skills
+        new skill('회피하기', 1, new bonus(0,0,0.9,0,0),'회피 자세를 취했다.',2)]  //skills
     ]
   },
   QuackDoctor : {
@@ -204,7 +206,7 @@ export const players = {
       100, 10, 0.5, 0, 0, 1, 0.5,
       // hp atk crit dodge combo acc escape
       [new skill('공격하기', 0, new bonus(),'오른팔을 거칠게 들었다.'),
-        new skill('회피하기', 1, new bonus({dodge:90}),'회피 자세를 취했다.')]  //skills
+        new skill('회피하기', 1, new bonus(0,0,90,0,0),'회피 자세를 취했다.'), 2]  //skills
     ]
   },
   Pickpocket : {
@@ -214,7 +216,7 @@ export const players = {
       100, 10, 0.5, 0, 0, 1, 0.5,
       // hp atk crit dodge combo acc escape
       [new skill('공격하기', 0, new bonus(),'오른팔을 거칠게 들었다.'),
-        new skill('회피하기', 1, new bonus({dodge:90}),'회피 자세를 취했다.')]  //skills
+        new skill('회피하기', 1, new bonus(0,0,90,0,0),'회피 자세를 취했다.', 2)]  //skills
     ]
   }
 }

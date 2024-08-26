@@ -49,25 +49,32 @@ export class Event{
     battle = async (stage, player, monster) => {
         let logs = [];
         let past_logs = [];
-        let turn = 0;
+        let turn = 1;
         let result = '';
         logs.push(chalk.green(`어두운 복도에서 ${chalk.redBright(monster.name)}와 마주쳤다.\n${monster.info}`));
         // 몬스터 패턴 결정
         let pattern = this.Random(monster.skills.length);
-        
-        // 버프 처리 or 행동 예고
-        logs.push(monster.skills[pattern].info)
+        let action = monster.skills[pattern]
 
+        // 버프 처리 및 행동 예고
+        logs.push(`===============턴:${turn}===============`) // 턴 확인
+        logs.push(`${chalk.redBright(monster.name)}(은)는 ${action.info}`)
+        monster.add_buff(action.bonus)
+        
         // 몬스터, 플레이어 중 하나가 패배하면 끝
         while(player.hp > 0 && monster.hp > 0) {
+            // 화면 초기화
             console.clear();
-        
             this.displayStatus(stage, turn, player, monster);
 
-            // 로그가 너무 길면 삭제. n개까지만 표시
-            while(logs.length > 7) past_logs.push(logs.shift())
+                // 로그가 너무 길면 삭제. n개까지만 표시
+            while(logs.length > 10) past_logs.push(logs.shift())
         
             logs.forEach((log) => console.log(log));
+
+            // 버프 소비
+            player.decrease_buff()
+            monster.decrease_buff()
         
             console.log(
             chalk.cyanBright(
@@ -83,7 +90,7 @@ export class Event{
                 choice_log = chalk.redBright(monster.name) + player.attack(monster);
                 break;
             case '2' :
-                choice_log = player.dodge_ready() 
+                choice_log = player.add_buff(player.skills[1].bonus)
                 break;
             case '3' :
                 if(player.escape())
@@ -106,21 +113,23 @@ export class Event{
         
             //몬스터의 차례
             if(monster.hp > 0){
-                if(monster.skills[pattern].type == 0){
+                if(action.type == 0){
                     choice_log = chalk.blueBright(player.name) + monster.attack(player)
                     logs.push(choice_log);
                 }
+                
+                turn++; // 턴 증가
+                logs.push(`===============턴:${turn}===============`) // 턴 확인
 
                 // 몬스터 패턴 결정
                 pattern = this.Random(monster.skills.length);
-                // 버프 처리 or 행동 예고
-                logs.push(monster.skills[pattern].info)
-            }
+                action = monster.skills[pattern]
+                logs.push(action.bonus)
 
-            // 버프 소비
-            player.decrease_buff()
-            monster.decrease_buff()
-            turn++; // 턴 증가
+                // 버프 처리 or 행동 예고
+                logs.push(`${chalk.redBright(monster.name)}(은)는 ${action.info}`)
+                monster.add_buff(action.bonus)
+            }
         }
         
         result = `${player.hp > 0 ? chalk.redBright(monster.name) : chalk.blueBright(player.name)}는 쓰러졌다.`
