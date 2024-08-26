@@ -2,22 +2,21 @@ import chalk from 'chalk';
 
 class bonus {
   constructor(atk=0, crit=0, dodge=0, acc=0, combo=0){
-    this.bonus = {
-      'atk' : atk,
-      'crit' : crit,
-      'dodge' : dodge,
-      'acc' : acc,
-      'combo' : combo
-    }
+    this.atk = atk;
+    this.crit = crit;
+    this.dodge = dodge;
+    this.acc = acc;
+    this.combo = combo;
   }
 }
 
 class skill {
-  constructor(name, type, bonus, info){
+  constructor(name, type, bonus, info, effect){
     this.name = name;
     this.type = type; // attack:0, buff:1
     this.bonus = bonus;
     this.info = info;
+    this.effect = effect;
   }
 }
 
@@ -56,7 +55,7 @@ export class Character {
     // 공격 행동 처리, 결과를 텍스트로 반환
     attack(enemy) {
       let result = '';
-      let bonus = this._buff_stack[0].bonus
+      let bonus = this._buff_stack[0]
       
       // 공격 명중 판정
       if(enemy.dodge(this.accuracy+bonus.acc))
@@ -88,7 +87,7 @@ export class Character {
         this._buff_stack.push(new bonus());
       
       // 버프 중첩
-      buff_stack.array.forEach((bonus) => {
+      buff_stack.forEach((bonus) => {
         for (const [key, value] of Object.entries(bonus)) {
           this._buff_stack[key] += value;
         }
@@ -124,7 +123,7 @@ export class Character {
     }
 }
 
-export const Monsters = {
+const Monsters = {
   Panicked_Prisoner : {
     'status' : [
       '허둥되는 수감자', // name
@@ -218,4 +217,21 @@ export const players = {
         new skill('회피하기', 1, new bonus({dodge:90}),'회피 자세를 취했다.')]  //skills
     ]
   }
+}
+
+// Monsters Array destructuring
+const [Panicked_Prisoner, Rabble, Madman, Political_Prisoner, Brawler] = Object.values(Monsters)
+
+// 몬스터 등장 풀
+export const encountPool = {
+  '1' : [Panicked_Prisoner],
+  '2' : [Panicked_Prisoner, Rabble],
+  '3' : [Panicked_Prisoner, Rabble, Madman],
+  '4' : [Panicked_Prisoner, Rabble, Madman, Political_Prisoner],
+  '5' : [Panicked_Prisoner, Rabble, Madman, Political_Prisoner],
+  '6' : [Panicked_Prisoner, Rabble, Madman, Political_Prisoner],
+  '7' : [Panicked_Prisoner, Rabble, Madman, Political_Prisoner],
+  '8' : [Panicked_Prisoner, Rabble],
+  '9' : [Brawler],
+  '10' : [Brawler]
 }

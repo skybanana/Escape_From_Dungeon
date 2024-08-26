@@ -1,7 +1,13 @@
 import chalk from "chalk";
 import readlineSync from 'readline-sync';
+import {Character, encountPool} from "./monsters.js"
 
 export class Event{
+    // Random utill
+    Random(n) {
+        return Math.floor(Math.random() * n)
+    }
+
     // 전투 상황 표시
     displayStatus(stage, turn, player, monster) {
         console.log(chalk.magentaBright(`\n=== Current Status ===`));
@@ -32,8 +38,11 @@ export class Event{
     event_end = async (stage, player, monster, result) => {
     };
     
-    monster_Encount = (stage) => {
-        console.log("yet");
+    // 몬스터 랜덤 인카운트
+    enemyEncount = (stage) => {
+        const pool = encountPool[stage.toString()]
+        const enemy = pool[this.Random(pool.length)]
+        return new Character(...enemy.status)
     }
     
     // 전투 이벤트
@@ -44,7 +53,7 @@ export class Event{
         let result = '';
         logs.push(chalk.green(`어두운 복도에서 ${chalk.redBright(monster.name)}와 마주쳤다.\n${monster.info}`));
         // 몬스터 패턴 결정
-        let pattern = Math.floor(Math.random() * monster.skills.length);
+        let pattern = this.Random(monster.skills.length);
         
         // 버프 처리 or 행동 예고
         logs.push(monster.skills[pattern].info)
@@ -103,7 +112,7 @@ export class Event{
                 }
 
                 // 몬스터 패턴 결정
-                pattern = Math.floor(Math.random() * monster.skills.length);
+                pattern = this.Random(monster.skills.length);
                 // 버프 처리 or 행동 예고
                 logs.push(monster.skills[pattern].info)
             }
