@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import readlineSync from 'readline-sync';
-import {Character, players} from "./monsters.js"
+import {players} from "./monsters.js"
+import { Character } from './character.js';
 import {Event} from "./events.js"
 
 

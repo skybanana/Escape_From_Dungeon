@@ -1,6 +1,7 @@
 import chalk from "chalk";
 import readlineSync from 'readline-sync';
-import {Character, encountPool} from "./monsters.js"
+import {encountPool} from "./monsters.js"
+import {Character} from "./character.js";
 
 export class Event{
     // Random utill
@@ -58,8 +59,7 @@ export class Event{
 
         // 버프 처리 및 행동 예고
         logs.push(`===============턴:${turn}===============`) // 턴 확인
-        logs.push(`${chalk.redBright(monster.name)}(은)는 ${action.info}`)
-        monster.add_buff(action.bonus)
+        logs.push(`${chalk.redBright(monster.name)}(은)는 ${monster.add_buff(action)}`)
         
         // 몬스터, 플레이어 중 하나가 패배하면 끝
         while(player.hp > 0 && monster.hp > 0) {
@@ -73,8 +73,8 @@ export class Event{
             logs.forEach((log) => console.log(log));
 
             // 버프 소비
-            player.decrease_buff()
-            monster.decrease_buff()
+            // player.decrease_buff()
+            // monster.decrease_buff()
         
             console.log(
             chalk.cyanBright(
@@ -87,10 +87,11 @@ export class Event{
             let choice_log = ''
             switch (choice){
             case '1' : 
+                player.add_buff(player.skills[0])
                 choice_log = chalk.redBright(monster.name) + player.attack(monster);
                 break;
             case '2' :
-                choice_log = player.add_buff(player.skills[1].bonus)
+                choice_log = player.add_buff(player.skills[1])
                 break;
             case '3' :
                 if(player.escape())
@@ -124,11 +125,12 @@ export class Event{
                 // 몬스터 패턴 결정
                 pattern = this.Random(monster.skills.length);
                 action = monster.skills[pattern]
+                
+                //test bonus display
                 logs.push(action.bonus)
 
                 // 버프 처리 or 행동 예고
-                logs.push(`${chalk.redBright(monster.name)}(은)는 ${action.info}`)
-                monster.add_buff(action.bonus)
+                logs.push(`${chalk.redBright(monster.name)}(은)는 ${monster.add_buff(action)}`)
             }
         }
         
