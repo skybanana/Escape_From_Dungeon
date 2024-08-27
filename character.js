@@ -68,9 +68,9 @@ export class Character {
 
     //회피 판정
     dodge(atk_acc) {
-    const _bonus = this._buff_stack.length ? this._buff_stack.shift() : new bonus()
-    const hit = atk_acc - (this.dodge_chance + _bonus.dodge)
-    return  Math.random() < hit ? false : true;
+        const _bonus = this._buff_stack.length ? this._buff_stack.shift() : new bonus()
+        const hit = atk_acc - (this.dodge_chance + _bonus.dodge)
+        return  Math.random() < hit ? false : true;
     }
 
     // 버프 추가 및 중첩
@@ -88,11 +88,23 @@ export class Character {
             }
         });
 
-        return skill.info
+        // 버프 설명 반환
+        return '(은)는 ' + skill.info
     }
-    
+
+    action(skill, enemy){
+        const target = skill.target ? enemy : this
+        switch (skill.type){
+            case 0 : return chalk.green(target.add_buff(skill))
+            case 1 : return target.add_buff(skill)
+            case 2 : return skill.effect()
+        }
+
+        return `Skill Type Error! skill.type = ${skill.type}`
+    }
+
     //Player만 이용하는 기능
-    escape() {
+    run() {
         return  Math.random() < this.escape_chance ? true : false
     }
 }

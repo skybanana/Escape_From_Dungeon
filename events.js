@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import readlineSync from 'readline-sync';
-import {encountPool} from "./monsters.js"
+import {encountPool} from "./enemies.js"
 import {Character} from "./character.js";
 
 export class Event{
@@ -35,7 +35,7 @@ export class Event{
         readlineSync.question('- Press Enter -');
     }
     
-      
+    // 전투 보상
     event_end = async (stage, player, monster, result) => {
     };
     
@@ -55,11 +55,11 @@ export class Event{
         logs.push(chalk.green(`어두운 복도에서 ${chalk.redBright(monster.name)}와 마주쳤다.\n${monster.info}`));
         // 몬스터 패턴 결정
         let pattern = this.Random(monster.skills.length);
-        let action = monster.skills[pattern]
+        let skill = monster.skills[pattern]
 
         // 버프 처리 및 행동 예고
         logs.push(`===============턴:${turn}===============`) // 턴 확인
-        logs.push(`${chalk.redBright(monster.name)}(은)는 ${monster.add_buff(action)}`)
+        logs.push(chalk.redBright(monster.name) + monster.action(skill, player))
         
         // 몬스터, 플레이어 중 하나가 패배하면 끝
         while(player.hp > 0 && monster.hp > 0) {
@@ -71,14 +71,10 @@ export class Event{
             while(logs.length > 10) past_logs.push(logs.shift())
         
             logs.forEach((log) => console.log(log));
-
-            // 버프 소비
-            // player.decrease_buff()
-            // monster.decrease_buff()
         
             console.log(
             chalk.cyanBright(
-                `\n1. 공격한다(치명${player.crit_chance*100}%) 2. 회피한다(${player.dodge_chance*100}%) 3. 도망친다(${player.escape_chance*100}%) 4. 로그확인`,
+                `\n1. 공격한다(치명${player.crit_chance*100}%) 2. 회피한다(${player.skills[1].bonus[0].dodge*100}%) 3. 도망친다(${player.escape_chance*100}%) 4. 로그확인`,
             ),
             );
             const choice = readlineSync.question('당신의 선택은? ');
@@ -87,17 +83,17 @@ export class Event{
             let choice_log = ''
             switch (choice){
             case '1' : 
-                player.add_buff(player.skills[0])
+                player.action(player.skills[0], monster)
                 choice_log = chalk.redBright(monster.name) + player.attack(monster);
                 break;
             case '2' :
-                choice_log = player.add_buff(player.skills[1])
+                choice_log = chalk.blueBright(player.name) +player.action(player.skills[1], monster)
                 break;
             case '3' :
-                if(player.escape())
-                return chalk.green(`${chalk.blueBright(player.name)}는 무사히 도망쳤다.`);
+                if(player.run())
+                    return chalk.green(`${chalk.blueBright(player.name)}는 무사히 도망쳤다.`);
                 else
-                choice_log = chalk.green("도망칠 수 없었다.");
+                    choice_log = chalk.green("도망칠 수 없었다.");
                 break;
             case '4' :
                 console.clear()
@@ -114,7 +110,7 @@ export class Event{
         
             //몬스터의 차례
             if(monster.hp > 0){
-                if(action.type == 0){
+                if(skill.type == 0){
                     choice_log = chalk.blueBright(player.name) + monster.attack(player)
                     logs.push(choice_log);
                 }
@@ -124,13 +120,10 @@ export class Event{
 
                 // 몬스터 패턴 결정
                 pattern = this.Random(monster.skills.length);
-                action = monster.skills[pattern]
-                
-                //test bonus display
-                logs.push(action.bonus)
+                skill = monster.skills[pattern]
 
                 // 버프 처리 or 행동 예고
-                logs.push(`${chalk.redBright(monster.name)}(은)는 ${monster.add_buff(action)}`)
+                logs.push(chalk.redBright(monster.name) + monster.action(skill, player))
             }
         }
         
