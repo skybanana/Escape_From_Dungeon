@@ -31,7 +31,7 @@ const Enemies = {
       [new skill('밀치기', 0, new bonus(-0.4,0.3,0,0,0),'나를 강하게 거부하며 밀어내려한다.'),
         new skill('미친짓1', 0, new bonus(0.2,0,0,0,0),'\"쇠창살은 부서지고, 머리들은 구르지! 누구의 머리부터일까!?\"'),
         new skill('미친짓2', 1, new bonus(0,0,0.8,0,0),'\"문이 열렸어... 피, 피로 물들어! 자유가 온다, 하하!\"'),
-        new skill('미친짓3', 1, new bonus(0,0,0,0,0.6),'\"하얀 깃발이 펄럭거려... 우리를 구하러? 아니면 죽이러?\"',3,1)]  //skills
+        new skill('미친짓3', 1, new bonus(0,0,0,0,0.6),'\"하얀 깃발이 펄럭거려... 나를 구하러? 아니면 죽이러?\"',3,1)]  //skills
     ]
   },
   Rabble : {
@@ -42,8 +42,8 @@ const Enemies = {
       //hp atk crit dodge combo acc escape
       [new skill('공격하기1', 0, new bonus(), '\"우린 너희를 위해 싸운게 아니야!\" 몽둥이를 높게 들었다.'),
       new skill('공격하기2', 0, new bonus(), '\"쓰레기는 우리와 함께할 자격 없어!\" 몽둥이를 높게 들었다.'),
-      new skill('폭동 권유1', 1, new bonus(0,0,0.7,0,0), '\"바스티유는 무너졌다! 누구도 이제 억압당하지 않는다!\"',3,1),
-      new skill('폭동 권유2', 1, new bonus(0.5,0,0,0,0), '\"자유를 위해 싸워라! 왕정의 쇠사슬을 부숴라!\"',3,1)]  //skills
+      new skill('폭동권유1', 1, new bonus(0,0,0.7,0,0), '\"바스티유는 무너졌다! 누구도 이제 억압당하지 않는다!\"',3,1),
+      new skill('폭동권유2', 1, new bonus(0.5,0,0,0,0), '\"자유를 위해 싸워라! 왕정의 쇠사슬을 부숴라!\"',3,1)]  //skills
     ]
   },
   Brawler : {
@@ -83,7 +83,7 @@ export const players = {
     'status' : [
       '강도', // name
       "뺏는 것말곤 할 줄아는 게 없는 자다. 그 손에선 무엇도 태어나지 않는다.", // info
-      100, 20, 0, 0, 0, 1, 0.1,
+      100, 20, 0, 0, 1, 1, 0.1,
       // hp atk crit dodge combo acc escape
       [new skill('공격하기', 0, new bonus(),'오른팔을 거칠게 들었다.', 1),
         new skill('회피하기', 1, new bonus(0,0,0.8,0,0),'회피 자세를 취했다.',2)]  //skills
@@ -119,7 +119,7 @@ export const encountPool = {
   '1' : [Panicked_Prisoner],
   '2' : [Panicked_Prisoner, Rabble],
   '3' : [Rabble, Madman],
-  '4' : [Rabble, Madman, Political_Prisoner],
+  '4' : [Rabble, Madman],
   '5' : [Rabble, Political_Prisoner],
   '6' : [Rabble, Political_Prisoner],
   '7' : [Rabble, Political_Prisoner],

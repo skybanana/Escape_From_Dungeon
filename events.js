@@ -84,7 +84,7 @@ export class Event{
             switch (choice){
             case '1' : 
                 player.action(player.skills[0], monster)
-                choice_log = chalk.redBright(monster.name) + player.attack(monster);
+                choice_log = player.attack(monster).map(e=>chalk.redBright(monster.name) + e).join('\n');
                 break;
             case '2' :
                 choice_log = chalk.blueBright(player.name) +player.action(player.skills[1], monster)
@@ -111,7 +111,7 @@ export class Event{
             //몬스터의 차례
             if(monster.hp > 0){
                 if(skill.type == 0){
-                    choice_log = chalk.blueBright(player.name) + monster.attack(player)
+                    choice_log = monster.attack(monster).map(e=>chalk.blueBright(player.name)+e).join('\n')
                     logs.push(choice_log);
                 }
                 
