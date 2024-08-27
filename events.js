@@ -74,7 +74,7 @@ export class Event{
         
             console.log(
             chalk.cyanBright(
-                `\n1. 공격한다(치명${player.crit_chance*100}%) 2. 회피한다(${player.skills[1].bonus[0].dodge*100}%) 3. 도망친다(${player.escape_chance*100}%) 4. 로그확인`,
+                `\n1. 공격한다(치명${player.crit_chance*100}% 연계${player.combo_chance*100}%) 2. 회피한다(${player.skills[1].bonus[0].dodge*100}%) 3. 도망친다(${player.escape_chance*100}%) 4. 로그확인`,
             ),
             );
             const choice = readlineSync.question('당신의 선택은? ');

@@ -83,7 +83,7 @@ export const players = {
     'status' : [
       '강도', // name
       "뺏는 것말곤 할 줄아는 게 없는 자다. 그 손에선 무엇도 태어나지 않는다.", // info
-      100, 20, 0, 0, 1, 1, 0.1,
+      1000, 20, 0.2, 0, 1, 1, 0.1,
       // hp atk crit dodge combo acc escape
       [new skill('공격하기', 0, new bonus(),'오른팔을 거칠게 들었다.', 1),
         new skill('회피하기', 1, new bonus(0,0,0.8,0,0),'회피 자세를 취했다.',2)]  //skills

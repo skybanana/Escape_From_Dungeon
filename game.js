@@ -25,8 +25,6 @@ export async function startGame() {
     // 전투 이벤트
     await event.battle(stage, player, monster);
 
-    // 보상 이벤트
-
     stage++;
   }
 
