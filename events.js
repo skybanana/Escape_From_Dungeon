@@ -132,7 +132,11 @@ export class Event{
         console.clear();
         this.displayStatus(stage, 0, player, monster);
         
-        console.log(chalk.green(result));
+        console.log(`${chalk.green(result)}\n잠시 쉬어 체력을 회복했다. HP+${5*stage}`);
+
+        //클리어 보상
+        player.hp += 5 * stage
+
         readlineSync.question('\n Enter');
     };
 }

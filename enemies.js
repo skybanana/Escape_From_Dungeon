@@ -81,7 +81,7 @@ export const players = {
   },
   Highwayman : {
     'status' : [
-      '강도', // name
+      '플레이어', // name
       "뺏는 것말곤 할 줄아는 게 없는 자다. 그 손에선 무엇도 태어나지 않는다.", // info
       1000, 20, 0.2, 0, 1, 1, 0.1,
       // hp atk crit dodge combo acc escape
